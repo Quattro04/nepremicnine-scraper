@@ -16,9 +16,7 @@ const NEPREMICNINE = [
    'hisa'
 ]
  
-const getPosesti = async () => {
-   driver = await new webdriver.Builder().forBrowser('firefox').build();
-
+const getPosesti = async (driver) => {
    let rawdata = fs.readFileSync('posestiLast.json');
    let lastItems = JSON.parse(rawdata);
 
@@ -53,14 +51,10 @@ const getPosesti = async () => {
 
    fs.writeFileSync("posestiLast.json", JSON.stringify(lastItems, null, 4));
 
-   driver.quit();
-
    return Promise.resolve();
 }
 
-const getHise = async () => {
-   driver = await new webdriver.Builder().forBrowser('firefox').build();
-
+const getHise = async (driver) => {
    let rawdata = fs.readFileSync('hiseLast.json');
    let lastItems = JSON.parse(rawdata);
 
@@ -95,14 +89,17 @@ const getHise = async () => {
 
    fs.writeFileSync("hiseLast.json", JSON.stringify(lastItems, null, 4));
 
-   driver.quit();
-
    return Promise.resolve();
 }
 
 const scrape = async () => {
-   await getPosesti();
-   await getHise();
+
+   driver = await new webdriver.Builder().forBrowser('firefox').build();
+
+   await getPosesti(driver);
+   await getHise(driver);
+
+   driver.quit();
 }
 
 scrape();
