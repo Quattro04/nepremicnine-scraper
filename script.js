@@ -1,7 +1,12 @@
 
-var webdriver = require('selenium-webdriver');
-const { By } = webdriver; 
-var fs = require('fs');
+import webdriver, { By } from 'selenium-webdriver';
+import fs from 'fs';
+// import { initializeApp } from 'firebase/app';
+// import { getAuth, signInWithCustomToken } from "firebase/auth";
+import admin from 'firebase-admin';
+import { getFirestore, collection, getDocs, addDoc } from 'firebase/firestore/lite';
+// import firebaseConfig from 'config/config.json';
+import serviceAccount  from './config/auth.json' assert {type: 'json'};
 
 const REGIONS = [
    'ljubljana-mesto',
@@ -11,16 +16,33 @@ const REGIONS = [
    'notranjska'
 ]
 
-const NEPREMICNINE = [
-   'posest',
-   'hisa'
-]
+admin.initializeApp({
+   credential: admin.credential.cert(serviceAccount)
+});
+
+const db = admin.firestore()
+
+try
+{
+   await db.collection("items")
+      .set("123141")
+      .update({
+         "id": "123141",
+         "title": "BEST HOUSE",
+         "url": "www",
+         "region": "neki"
+      })
+}
+catch(err)
+{
+   console.log(err)
+}
  
 const getPosesti = async (driver) => {
    let rawdata = fs.readFileSync('posestiLast.json');
    let lastItems = JSON.parse(rawdata);
 
-   newItems = {};
+   let newItems = {};
 
    for(let r = 0; r < REGIONS.length; r++) {
       await driver.get(`https://www.nepremicnine.net/oglasi-prodaja/${REGIONS[r]}/posest/zazidljiva/?s=16`);
@@ -38,13 +60,17 @@ const getPosesti = async (driver) => {
          if (!newItems[REGIONS[r]]) newItems = { ...newItems, [REGIONS[r]]: [] };
 
          newItems[REGIONS[r]].push({ id, title, url, region: REGIONS[r] });
+
+         // addDoc(db, { id, title, url, region: REGIONS[r] })
       }
    }
 
    fs.writeFileSync("posestiNew.json", JSON.stringify(newItems, null, 4));
 
+   // return Promise.resolve();
+
    // Update last posesti
-   for (i = 0; i < Object.keys(newItems).length; i++) {
+   for (let i = 0; i < Object.keys(newItems).length; i++) {
       const region = Object.keys(newItems)[i];
       lastItems[region] = newItems[region][0].id;
    }
@@ -58,7 +84,7 @@ const getHise = async (driver) => {
    let rawdata = fs.readFileSync('hiseLast.json');
    let lastItems = JSON.parse(rawdata);
 
-   newItems = {};
+   let newItems = {};
 
    for(let r = 0; r < REGIONS.length; r++) {
       await driver.get(`https://www.nepremicnine.net/oglasi-prodaja/${REGIONS[r]}/hisa/?s=16`);
@@ -82,7 +108,7 @@ const getHise = async (driver) => {
    fs.writeFileSync("hiseNew.json", JSON.stringify(newItems, null, 4));
 
    // Update last hise
-   for (i = 0; i < Object.keys(newItems).length; i++) {
+   for (let i = 0; i < Object.keys(newItems).length; i++) {
       const region = Object.keys(newItems)[i];
       lastItems[region] = newItems[region][0].id;
    }
@@ -94,7 +120,7 @@ const getHise = async (driver) => {
 
 const scrape = async () => {
 
-   driver = await new webdriver.Builder().forBrowser('firefox').build();
+   const driver = await new webdriver.Builder().forBrowser('firefox').build();
 
    await getPosesti(driver);
    await getHise(driver);
@@ -102,4 +128,4 @@ const scrape = async () => {
    driver.quit();
 }
 
-scrape();
+// scrape();
