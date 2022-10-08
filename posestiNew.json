@@ -1,10 +1,90 @@
 {
     "ljubljana-okolica": [
         {
-            "id": "o6510878",
-            "title": "SREDNJA VAS PRI POLHOVEM GRAD., POLHOV GRADEC",
-            "url": "https://www.nepremicnine.net/oglasi-prodaja/srednja-vas-pri-polhovem-grad-polhov-gradec-posest_6510878/",
+            "id": "o6512287",
+            "title": "MENGEŠ",
+            "url": "https://www.nepremicnine.net/oglasi-prodaja/menges-posest_6512287/",
+            "velikost": "1.159,00 m2",
+            "cena": "338.000,00 €",
             "region": "ljubljana-okolica"
+        },
+        {
+            "id": "o6512260",
+            "title": "MORAVČE",
+            "url": "https://www.nepremicnine.net/oglasi-prodaja/moravce-posest_6512260/",
+            "velikost": "854,00 m2",
+            "cena": "200.000,00 €",
+            "region": "ljubljana-okolica"
+        },
+        {
+            "id": "o6512152",
+            "title": "TOPOL PRI MEDVODAH",
+            "url": "https://www.nepremicnine.net/oglasi-prodaja/topol-pri-medvodah-posest_6512152/",
+            "velikost": "1.276,00 m2",
+            "cena": "110.000,00 €",
+            "region": "ljubljana-okolica"
+        },
+        {
+            "id": "o6512151",
+            "title": "TOPOL PRI MEDVODAH",
+            "url": "https://www.nepremicnine.net/oglasi-prodaja/topol-pri-medvodah-posest_6512151/",
+            "velikost": "800,00 m2",
+            "cena": "55.000,00 €",
+            "region": "ljubljana-okolica"
+        },
+        {
+            "id": "o6512081",
+            "title": "GABRJE",
+            "url": "https://www.nepremicnine.net/oglasi-prodaja/gabrje-posest_6512081/",
+            "velikost": "4.200,00 m2",
+            "cena": "420.000,00 €",
+            "region": "ljubljana-okolica"
+        }
+    ],
+    "juzna-primorska": [
+        {
+            "id": "o6512164",
+            "title": "LOKEV",
+            "url": "https://www.nepremicnine.net/oglasi-prodaja/lokev-posest_6512164/",
+            "velikost": "619,00 m2",
+            "cena": "59.424,00 €",
+            "region": "juzna-primorska"
+        },
+        {
+            "id": "o6512163",
+            "title": "BERTOKI, OBRTNA CONA SERMIN",
+            "url": "https://www.nepremicnine.net/oglasi-prodaja/bertoki-obrtna-cona-sermin-posest_6512163/",
+            "velikost": "94.566,00 m2",
+            "cena": "220,00 €/m2",
+            "region": "juzna-primorska"
+        },
+        {
+            "id": "o6512162",
+            "title": "LOKEV",
+            "url": "https://www.nepremicnine.net/oglasi-prodaja/lokev-posest_6512162/",
+            "velikost": "513,00 m2",
+            "cena": "49.248,00 €",
+            "region": "juzna-primorska"
+        }
+    ],
+    "severna-primorska": [
+        {
+            "id": "o6512276",
+            "title": "PODSABOTIN",
+            "url": "https://www.nepremicnine.net/oglasi-prodaja/podsabotin-posest_6512276/",
+            "velikost": "868,00 m2",
+            "cena": "45.200,00 €",
+            "region": "severna-primorska"
+        }
+    ],
+    "notranjska": [
+        {
+            "id": "o6512220",
+            "title": "PRESTRANEK",
+            "url": "https://www.nepremicnine.net/oglasi-prodaja/prestranek-posest_6512220/",
+            "velikost": "1.627,00 m2",
+            "cena": "70,00 €/m2",
+            "region": "notranjska"
         }
     ]
 }
