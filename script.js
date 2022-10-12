@@ -2,7 +2,6 @@
 import webdriver, { By } from 'selenium-webdriver';
 import fs from 'fs';
 import admin from 'firebase-admin';
-import serviceAccount  from './config/auth.json' assert {type: 'json'};
 
 const REGIONS = [
    'ljubljana-mesto',
@@ -13,7 +12,7 @@ const REGIONS = [
 ]
 
 admin.initializeApp({
-   credential: admin.credential.cert(serviceAccount)
+   credential: admin.credential.cert(JSON.parse(process.env.SERVICE_ACCOUNT))
 });
 
 const db = admin.firestore()
