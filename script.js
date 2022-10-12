@@ -1,13 +1,7 @@
 
 import webdriver, { By } from 'selenium-webdriver';
 import fs from 'fs';
-// import { initializeApp } from 'firebase/app';
-// import { getAuth, signInWithCustomToken } from "firebase/auth";
 import admin from 'firebase-admin';
-// import { getFirestore, collection, getDocs, addDoc } from 'firebase/firestore/lite';
-// import { doc, setDoc } from "firebase/firestore"; 
-import { collection, addDoc } from "firebase/firestore"; 
-// import firebaseConfig from 'config/config.json';
 import serviceAccount  from './config/auth.json' assert {type: 'json'};
 
 const REGIONS = [
@@ -42,24 +36,38 @@ const getItems = async (type, driver) => {
             const title = await titleElement.getText();
             const anchorElement = await items[i].findElement(By.xpath(`//a[@title="${id.substring('1')}"]`));
             const url = await anchorElement.getAttribute('href');
-            const velikostElement = await items[i].findElement(By.className('velikost'));
-            const velikost = await velikostElement.getText();
-            const cenaElement = await items[i].findElement(By.className('cena'));
-            const cena = await cenaElement.getText();
+            const sizeElement = await items[i].findElement(By.className('velikost'));
+            const size = await sizeElement.getText();
+            const priceElement = await items[i].findElement(By.className('cena'));
+            const price = await priceElement.getText();
+            const imageElement = await items[i].findElement(By.xpath(`//img[@itemprop="image"]`));
+            const image = await imageElement.getAttribute('src');
     
             if (!newItems[REGIONS[r]]) newItems = { ...newItems, [REGIONS[r]]: [] };
     
-            newItems[REGIONS[r]].push({ id, title, url, velikost, cena, region: REGIONS[r], date: new Date().toISOString() });
+            newItems[REGIONS[r]].push({ id, title, url, size, price, image, region: REGIONS[r], date: new Date().toISOString() });
         }
     }
 
+    // Write to database
     try {
-        db.collection(type).add(newItems);
+        for(let i = 0; i < Object.keys(newItems).length; i++ ) {
+            let doc = await db.collection(type).doc(Object.keys(newItems)[i]).get();
+
+            if (doc.exists) {
+                const data = doc.data();
+                await db.collection(type).doc(Object.keys(newItems)[i]).set({ data: [...data.data, Object.values(newItems)[i]] });
+            } else {
+                await db.collection(type).doc(Object.keys(newItems)[i]).set({ data: Object.values(newItems)[i] });
+            }
+        }
     } catch(error) {
-        console.log(error);
+        console.log('DATABASE WRITE ERROR: ', error);
     };
 
-    fs.writeFileSync(`${type}New.json`, JSON.stringify(newItems, null, 4));
+    console.log('-----------------------------------------------');
+    console.log('GOT NEW ITEMS: ', Object.keys(newItems).length);
+    console.log('-----------------------------------------------');
 
     // Update last posesti
     for (let i = 0; i < Object.keys(newItems).length; i++) {
@@ -82,4 +90,15 @@ const scrape = async () => {
    driver.quit();
 }
 
+const halfDayInMilliseconds = 1000 * 60 * 60 * 12;
+
+console.log('-----------------------------------------------');
+console.log('STARTING SCRAPE');
+console.log('-----------------------------------------------');
 scrape();
+setInterval(() => {
+    console.log('-----------------------------------------------');
+    console.log('STARTING SCRAPE');
+    console.log('-----------------------------------------------');
+    scrape();
+}, halfDayInMilliseconds);
