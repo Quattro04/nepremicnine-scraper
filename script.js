@@ -1,7 +1,9 @@
 
 import webdriver, { By } from 'selenium-webdriver';
+import chrome from 'selenium-webdriver/chrome';
 import fs from 'fs';
 import admin from 'firebase-admin';
+
 
 const REGIONS = [
    'ljubljana-mesto',
@@ -10,6 +12,12 @@ const REGIONS = [
    'severna-primorska',
    'notranjska'
 ]
+
+const options = new chrome.Options();
+//Below arguments are critical for Heroku deployment
+options.addArguments("--headless");
+options.addArguments("--disable-gpu");
+options.addArguments("--no-sandbox");
 
 admin.initializeApp({
    credential: admin.credential.cert(JSON.parse(process.env.SERVICE_ACCOUNT))
@@ -81,7 +89,7 @@ const getItems = async (type, driver) => {
 
 const scrape = async () => {
 
-   const driver = await new webdriver.Builder().forBrowser('firefox').build();
+   const driver = await new webdriver.Builder().forBrowser('chrome').setChromeOptions(options).build();
 
    await getItems("posest", driver);
    await getItems("hisa", driver);
