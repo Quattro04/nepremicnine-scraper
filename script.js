@@ -76,13 +76,18 @@ const getItems = async (type, driver) => {
     console.log('GOT NEW ITEMS: ', Object.keys(newItems).length);
     console.log('-----------------------------------------------');
 
-    // Update last posesti
-    for (let i = 0; i < Object.keys(newItems).length; i++) {
-        const region = Object.keys(newItems)[i];
-        lastItems[region] = newItems[region][0].id;
-    }
 
-    fs.writeFileSync(`${type}Last.json`, JSON.stringify(lastItems, null, 4));
+    // Update last posesti
+    try {
+      for (let i = 0; i < Object.keys(newItems).length; i++) {
+         const region = Object.keys(newItems)[i];
+         lastItems[region] = newItems[region][0].id;
+      }
+
+      fs.writeFileSync(`${type}Last.json`, JSON.stringify(lastItems, null, 4));
+   } catch(error) {
+      console.log('UPDATE LAST ITEMS FILE ERROR: ', error)
+   }
 
     return Promise.resolve();
 }
