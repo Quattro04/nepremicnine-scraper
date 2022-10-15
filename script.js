@@ -97,15 +97,15 @@ const scrape = async () => {
    driver.quit();
 }
 
-const halfDayInMilliseconds = 1000 * 60 * 60 * 12;
-
 console.log('-----------------------------------------------');
 console.log('STARTING SCRAPE');
 console.log('-----------------------------------------------');
 scrape();
-setInterval(() => {
-    console.log('-----------------------------------------------');
-    console.log('STARTING SCRAPE');
-    console.log('-----------------------------------------------');
-    scrape();
-}, halfDayInMilliseconds);
+
+// const halfDayInMilliseconds = 1000 * 60 * 60 * 12;
+// setInterval(() => {
+//     console.log('-----------------------------------------------');
+//     console.log('STARTING SCRAPE');
+//     console.log('-----------------------------------------------');
+//     scrape();
+// }, halfDayInMilliseconds);
