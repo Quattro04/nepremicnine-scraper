@@ -31,29 +31,35 @@ const getItems = async (type, driver) => {
 
     let newItems = {};
 
-    for(let r = 0; r < REGIONS.length; r++) {
-        await driver.get(`https://www.nepremicnine.net/oglasi-prodaja/${REGIONS[r]}/${type}/${type === 'posest' ? 'zazidljiva/' : ''}?s=16`);
+    try {
 
-        const items = await driver.findElements(By.className('oglas_container'));
+        for(let r = 0; r < REGIONS.length; r++) {
+            await driver.get(`https://www.nepremicnine.net/oglasi-prodaja/${REGIONS[r]}/${type}/${type === 'posest' ? 'zazidljiva/' : ''}?s=16`);
 
-        for(let i = 0; i < items.length; i++) {
-            const id = await items[i].getAttribute("id");
-            if (id === lastItems[REGIONS[r]]) break;
-            const titleElement = await items[i].findElement(By.className('title'));
-            const title = await titleElement.getText();
-            const anchorElement = await items[i].findElement(By.xpath(`//a[@title="${id.substring('1')}"]`));
-            const url = await anchorElement.getAttribute('href');
-            const sizeElement = await items[i].findElement(By.className('velikost'));
-            const size = await sizeElement.getText();
-            const priceElement = await items[i].findElement(By.className('cena'));
-            const price = await priceElement.getText();
-            const imageElement = await items[i].findElement(By.xpath(`//img[@itemprop="image"]`));
-            const image = await imageElement.getAttribute('src');
-    
-            if (!newItems[REGIONS[r]]) newItems = { ...newItems, [REGIONS[r]]: [] };
-    
-            newItems[REGIONS[r]].push({ id, title, url, size, price, image, region: REGIONS[r], date: new Date().toISOString() });
+            const items = await driver.findElements(By.className('oglas_container'));
+
+            for(let i = 0; i < items.length; i++) {
+                const id = await items[i].getAttribute("id");
+                if (id === lastItems[REGIONS[r]]) break;
+                const titleElement = await items[i].findElement(By.className('title'));
+                const title = await titleElement.getText();
+                const anchorElement = await items[i].findElement(By.xpath(`//a[@title="${id.substring('1')}"]`));
+                const url = await anchorElement.getAttribute('href');
+                const sizeElement = await items[i].findElement(By.className('velikost'));
+                const size = await sizeElement.getText();
+                const priceElement = await items[i].findElement(By.className('cena'));
+                const price = await priceElement.getText();
+                const imageElement = await items[i].findElement(By.xpath(`//img[@itemprop="image"]`));
+                const image = await imageElement.getAttribute('src');
+        
+                if (!newItems[REGIONS[r]]) newItems = { ...newItems, [REGIONS[r]]: [] };
+        
+                newItems[REGIONS[r]].push({ id, title, url, size, price, image, region: REGIONS[r], date: new Date().toISOString() });
+            }
         }
+
+    } catch(error) {
+        console.log(`PAGE SCRAPE ERROR (${type}): `, error);
     }
 
     // Write to database
@@ -69,11 +75,11 @@ const getItems = async (type, driver) => {
             }
         }
     } catch(error) {
-        console.log('DATABASE WRITE ERROR: ', error);
+        console.log(`DATABASE WRITE ERROR (${type}): `, error);
     };
 
     console.log('-----------------------------------------------');
-    console.log('GOT NEW ITEMS: ', Object.keys(newItems).length);
+    console.log(`GOT NEW ITEMS (${type}): `, Object.keys(newItems).length);
     console.log('-----------------------------------------------');
 
 
@@ -86,7 +92,7 @@ const getItems = async (type, driver) => {
 
       fs.writeFileSync(`${type}Last.json`, JSON.stringify(lastItems, null, 4));
    } catch(error) {
-      console.log('UPDATE LAST ITEMS FILE ERROR: ', error)
+      console.log(`UPDATE LAST ITEMS FILE ERROR (${type}): `, error)
    }
 
     return Promise.resolve();
